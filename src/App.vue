@@ -1,6 +1,129 @@
+<template>
+  <div class="app">
+    <!-- Navigation Bar -->
+    <nav class="nav">
+      <div class="logo">Your Brand Name</div>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#shop">Shop</a>
+        <a href="#bestsellers">Best Sellers</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <div class="hero">
+      <h1>Luxury Fragrances</h1>
+      <p>Discover your signature scent</p>
+    </div>
+
+    <!-- Featured Products -->
+    <div class="featured">
+      <h2>Best Sellers</h2>
+      <div class="product-grid">
+        <div v-for="perfume in perfumes" :key="perfume.id" class="product-card">
+          <img :src="perfume.image" :alt="perfume.name">
+          <h3>{{ perfume.name }}</h3>
+          <p>{{ perfume.description }}</p>
+          <p class="price">${{ perfume.price }}</p>
+          <button @click="addToCart(perfume)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
+import { ref } from 'vue'
+
+// Your perfume data
+const perfumes = ref([
+  {
+    id: 1,
+    name: 'Summer Breeze',
+    description: 'Light and fresh with citrus notes',
+    price: 79.99,
+    image: '/perfume1.jpg'
+  },
+  {
+    id: 2,
+    name: 'Midnight Rose',
+    description: 'Elegant rose with vanilla undertones',
+    price: 89.99,
+    image: '/perfume2.jpg'
+  },
+  // Add more perfumes here
+])
+
+// Add to cart function (we'll expand this later)
+const addToCart = (perfume) => {
+  alert(`Added ${perfume.name} to cart!`)
+}
 </script>
 
-<template>
-  IF YOU ARER READING THIS YOU ARE GAY AND HAVE SEX WITH MEN
-</template>
+<style>
+.app {
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.nav-links a {
+  margin-left: 2rem;
+  text-decoration: none;
+  color: #333;
+}
+
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f9f9f9;
+  margin: 2rem 0;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.product-card {
+  border: 1px solid #eee;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.product-card img {
+  max-width: 100%;
+  height: auto;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+button {
+  background: #000;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #333;
+}
+</style>
