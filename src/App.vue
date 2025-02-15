@@ -56,7 +56,7 @@ const perfumes = ref([
 ])
 
 // Add to cart function (we'll expand this later)
-const addToCart = (perfume) => {
+const addToCart = (perfume: any) => {
   alert(`Added ${perfume.name} to cart!`)
 }
 </script>
