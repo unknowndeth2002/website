@@ -2,5 +2,5 @@
 </script>
 
 <template>
-  test
+  IF YOU ARER READING THIS YOU ARE GAY AND HAVE SEX WITH MEN
 </template>
