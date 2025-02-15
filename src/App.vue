@@ -2,7 +2,7 @@
   <div class="app">
     <!-- Navigation Bar -->
     <nav class="nav">
-      <div class="logo">Your Brand Name</div>
+      <div class="logo">Unknown Scents</div>
       <div class="nav-links">
         <a href="#home">Home</a>
         <a href="#shop">Shop</a>
@@ -13,8 +13,8 @@
 
     <!-- Hero Banner -->
     <div class="hero">
-      <h1>Luxury Fragrances</h1>
-      <p>Discover your signature scent</p>
+      <h1>Unknown Scents</h1>
+      <p>Discover Shi Bru</p>
     </div>
 
     <!-- Featured Products -->
@@ -35,20 +35,20 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import 'primeicons/primeicons.css'
 // Your perfume data
 const perfumes = ref([
   {
     id: 1,
-    name: 'Summer Breeze',
-    description: 'Light and fresh with citrus notes',
+    name: 'Cyber Byte',
+    description: 'A gulp of air from the Y2K aesthetic',
     price: 79.99,
     image: '/perfume1.jpg'
   },
   {
     id: 2,
-    name: 'Midnight Rose',
-    description: 'Elegant rose with vanilla undertones',
+    name: 'Digital Diva',
+    description: 'A Vocaloid Inspired Scent',
     price: 89.99,
     image: '/perfume2.jpg'
   },
