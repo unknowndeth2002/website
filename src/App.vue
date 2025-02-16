@@ -57,10 +57,10 @@
           <p>{{ perfume.description }}</p>
           <p class="price">${{ perfume.price }}</p>
           <!-- Add stock indicator -->
-          <p class="stock" :class="{ 'low-stock': perfume.stock < 5 }">
-            In Stock: {{ perfume.stock }}
+          <p class="stock" :class="{ 'low-stock': (perfume.stock || 0) < 5 }">
+            In Stock: {{ perfume.stock || 0 }}
           </p>
-          <button @click="addToCart(perfume)" :disabled="perfume.stock === 0">
+          <button @click="addToCart(perfume)" :disabled="(perfume.stock || 0) === 0">
             Add to Cart
           </button>
         </div>
@@ -73,7 +73,7 @@
 import { ref, computed } from 'vue'
 import 'primeicons/primeicons.css'
 
-interface Perfume {
+type Perfume = {
   id: number
   name: string
   stock?: number
