@@ -18,11 +18,9 @@
         <h3>Your Cart</h3>
         <button @click="toggleCart">Close</button>
       </div>
-
       <div v-if="cartItems.length === 0" class="empty-cart">
         <p>Your cart is empty</p>
       </div>
-
       <div v-else class="cart-items">
         <div v-for="item in cartItems" :key="item.id" class="cart-item">
           <img :src="item.image" :alt="item.name">
@@ -78,8 +76,11 @@ import 'primeicons/primeicons.css'
 interface Perfume {
   id: number
   name: string
-  stock?: number  // Optional stock tracking
-  category?: string  // Optional categorization
+  stock?: number
+  category?: string
+  price: number
+  image: string
+  description: string
 }
 
 const cartItems = ref<Perfume[]>([])
@@ -97,8 +98,8 @@ const addToCart = (perfume: Perfume) => {
 }
 
 // Calculate cart total
-const calculateTotal = () => {
-  return cartItems.value.reduce((total, item) => total + item.price, 0).toFixed(2)
+const calculateTotal = (): number => {
+  return parseFloat(cartItems.value.reduce((total, item) => total + item.price, 0).toFixed(2))
 }
 
 // Sample perfume data
@@ -125,21 +126,21 @@ const perfumes = ref<Perfume[]>([
 ]);
 
 // Add a ref for the selected category
-const selectedCategory = ref<string>('All');
+const selectedCategory = ref<string>('All')
 
 // Filter perfumes by category using a computed property
-const filteredPerfumes = computed(() => {
+const filteredPerfumes = computed((): Perfume[] => {
   if (selectedCategory.value === 'All') {
-    return perfumes.value;
+    return perfumes.value
   } else {
     return perfumes.value.filter(perfume => perfume.category === selectedCategory.value);
   }
 });
 
 // Update the filterByCategory function
-const filterByCategory = (category: string) => {
-  selectedCategory.value = category;
-};
+const filterByCategory = (category: string): void => {
+  selectedCategory.value = category
+}
 
 </script>
 
