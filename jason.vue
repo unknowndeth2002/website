@@ -25,6 +25,10 @@
         <a href="#contact"><i class="pi pi-envelope"></i> Contact</a>
       </div>
   
+<div class="cart-icon" @click="toggleCart">
+  <i class="pi pi-shopping-cart"></i> 
+  <span class="cart-count">{{ cartItems.length }}</span>
+</div>
 
       <div class="cart-icon">
         <i class="pi pi-shopping-cart"></i>
