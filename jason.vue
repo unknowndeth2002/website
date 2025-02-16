@@ -1,33 +1,6 @@
 <template>
     <!-- This is the main container of your website -->
     <div class="app">
-      <div class="cart-icon" @click="toggleCart">
-  <i class="pi pi-shopping-cart"></i> 
-  <span class="cart-count">{{ cartItems.length }}</span>
-</div>
-
-<div class="shopping-cart" v-show="isCartVisible">
-  <div class="cart-header">
-    <h3>Your Cart</h3>
-    <button @click="toggleCart">Close</button>
-  </div>
-  
-  <div v-if="cartItems.length === 0" class="empty-cart">
-    <p>Your cart is empty</p>
-  </div>
-
-  <div v-else class="cart-items">
-    <div v-for="item in cartItems" :key="item.id" class="cart-item">
-      <img :src="item.image" :alt="item.name">
-      <h4>{{ item.name }}</h4>
-      <p>${{ item.price }}</p>
-    </div>
-  </div>
-
-  <div class="cart-total">
-    Total: ${{ calculateTotal() }}
-  </div>
-</div>
 
       <nav class="nav">
         <!-- 👇 CHANGE THIS TEXT to your store name -->
@@ -46,6 +19,29 @@
         </div>
       </nav>
   
+      <!-- Move shopping cart here, outside nav but inside app -->
+      <div class="shopping-cart" v-show="isCartVisible">
+        <div class="cart-header">
+          <h3>Your Cart</h3>
+          <button @click="toggleCart">Close</button>
+        </div>
+        
+        <div v-if="cartItems.length === 0" class="empty-cart">
+          <p>Your cart is empty</p>
+        </div>
+
+        <div v-else class="cart-items">
+          <div v-for="item in cartItems" :key="item.id" class="cart-item">
+            <img :src="item.image" :alt="item.name">
+            <h4>{{ item.name }}</h4>
+            <p>${{ item.price }}</p>
+          </div>
+        </div>
+
+        <div class="cart-total">
+          Total: ${{ calculateTotal() }}
+        </div>
+      </div>
 
       <div class="hero">
         <h1>Luxury Fragrances</h1>
@@ -193,6 +189,8 @@ const filterByCategory = (category: string) => {
   padding: 1rem;
   border-bottom: 1px solid #eee;
   position: relative;
+  /* Add this temporarily */
+  background: #f0f0f0;  /* Light gray background to see nav boundaries */
 }
 
 /* Navigation link styles */
@@ -224,6 +222,9 @@ const filterByCategory = (category: string) => {
   box-shadow: -2px 0 5px rgba(0,0,0,0.2);
   padding: 1rem;
   z-index: 9999;
+  /* Add these to debug visibility */
+  border: 2px solid red;  /* Temporary border to see boundaries */
+  pointer-events: all;    /* Ensure it can be interacted with */
 }
 
 .cart-header {
