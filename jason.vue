@@ -11,6 +11,14 @@
           <a href="#shop">Shop</a>
           <a href="#bestsellers">Best Sellers</a>
           <a href="#contact">Contact</a>
+
+      <div class="shopping-cart" v-show="isCartVisible">
+        <div class="cart-header">
+          <h3>Your Cart</h3>
+          <button @click="toggleCart">Close</button>
+        </div>
+        </div>
+
         </div>
         <!-- Add cart icon here -->
         <div class="cart-icon" @click="toggleCart">
@@ -19,12 +27,7 @@
         </div>
       </nav>
   
-      <!-- Move shopping cart here, outside nav but inside app -->
-      <div class="shopping-cart" v-show="isCartVisible">
-        <div class="cart-header">
-          <h3>Your Cart</h3>
-          <button @click="toggleCart">Close</button>
-        </div>
+
         
         <div v-if="cartItems.length === 0" class="empty-cart">
           <p>Your cart is empty</p>
@@ -222,9 +225,10 @@ const filterByCategory = (category: string) => {
   box-shadow: -2px 0 5px rgba(0,0,0,0.2);
   padding: 1rem;
   z-index: 9999;
-  /* Add these to debug visibility */
-  border: 2px solid red;  /* Temporary border to see boundaries */
-  pointer-events: all;    /* Ensure it can be interacted with */
+  border: 2px solid red;
+  pointer-events: all;
+  overflow-y: auto;
+  transform: translateZ(0);
 }
 
 .cart-header {
