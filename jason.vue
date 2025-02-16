@@ -14,6 +14,7 @@
         </div>
       </nav>
   
+
       <div class="hero">
         <h1>Luxury Fragrances</h1>
         <p>Discover your signature scent</p>
@@ -25,16 +26,35 @@
         <a href="#contact"><i class="pi pi-envelope"></i> Contact</a>
       </div>
   
+
 <div class="cart-icon" @click="toggleCart">
   <i class="pi pi-shopping-cart"></i> 
   <span class="cart-count">{{ cartItems.length }}</span>
 </div>
 
-      <div class="cart-icon">
-        <i class="pi pi-shopping-cart"></i>
-        <span class="cart-count">{{ cartItems.length }}</span>
-      </div>
+<div class="shopping-cart" v-show="isCartVisible">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button @click="toggleCart">Close</button>
+  </div>
   
+  <div v-if="cartItems.length === 0" class="empty-cart">
+    <p>Your cart is empty</p>
+  </div>
+
+<div v-else class="cart-items">
+  <div v-for="item in cartItems" :key="item.id" class="cart-item">
+    <img :src="item.image" :alt="item.name">
+    <h4>{{  item.name }}</h4>
+    <p>${{ item.price }}</p>
+  </div>
+</div>
+
+<div class="cart-total">
+        Total: ${{ calculateTotal() }}
+    </div>
+</div>
+
       <div class="filters">
         <button 
           v-for="category in ['All', 'Fresh', 'Floral', 'Woody']" 
@@ -74,6 +94,8 @@
     </div>
   </template>
   
+
+
   <script setup lang="ts">
   // This imports the tools we need from Vue
   import { ref } from 'vue'
@@ -92,6 +114,11 @@
 
   // Add shopping cart functionality
   const cartItems = ref<Perfume[]>([])
+  const isCartVisible = ref(false)
+
+  const toggleCart = () => {
+    isCartVisible.value = !isCartVisible.value
+  }
 
   // Enhanced addToCart function
   const addToCart = (perfume: Perfume) => {
@@ -177,6 +204,51 @@
     margin: 2rem 0;
   }
   
+
+/*shopping cart display*/
+.shopping-cart {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background: white;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  padding: 1rem;
+  z-index: 1000;  
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cart-items {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+.cart-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 2rem;
+  color: #665;
+}
+
+.cart-total {
+  text-align: right;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
   /* Product grid layout */
   .product-grid {
     display: grid;
