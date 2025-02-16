@@ -1,32 +1,70 @@
 <template>
   <div class="app">
-    <!-- Navigation Bar -->
     <nav class="nav">
-      <div class="logo">Unknown Scents</div>
+      <div class="logo">Your Brand Name</div>
       <div class="nav-links">
         <a href="#home">Home</a>
         <a href="#shop">Shop</a>
         <a href="#bestsellers">Best Sellers</a>
         <a href="#contact">Contact</a>
       </div>
+      <div class="cart-icon" @click="toggleCart">
+        <i class="pi pi-shopping-cart"></i>
+        <span class="cart-count">{{ cartItems.length }}</span>
+      </div>
     </nav>
+    <div class="shopping-cart" v-if="isCartVisible">
+      <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button @click="toggleCart">Close</button>
+      </div>
 
-    <!-- Hero Banner -->
-    <div class="hero">
-      <h1>Unknown Scents</h1>
-      <p>Discover Shi Bru</p>
+      <div v-if="cartItems.length === 0" class="empty-cart">
+        <p>Your cart is empty</p>
+      </div>
+
+      <div v-else class="cart-items">
+        <div v-for="item in cartItems" :key="item.id" class="cart-item">
+          <img :src="item.image" :alt="item.name">
+          <h4>{{ item.name }}</h4>
+          <p>${{ item.price }}</p>
+        </div>
+      </div>
+
+      <div class="cart-total">
+        Total: ${{ calculateTotal() }}
+      </div>
     </div>
 
-    <!-- Featured Products -->
+    <div class="hero">
+      <h1>Luxury Fragrances</h1>
+      <p>Discover your signature scent</p>
+    </div>
+
+
+    <div class="filters">
+      <button v-for="category in ['All', 'Fresh', 'Floral', 'Woody']" :key="category"
+        @click="filterByCategory(category)">
+        {{ category }}
+      </button>
+    </div>
+
+    <!-- Product display section -->
     <div class="featured">
       <h2>Best Sellers</h2>
       <div class="product-grid">
-        <div v-for="perfume in perfumes" :key="perfume.id" class="product-card">
+        <div v-for="perfume in filteredPerfumes" :key="perfume.id" class="product-card">
           <img :src="perfume.image" :alt="perfume.name">
           <h3>{{ perfume.name }}</h3>
           <p>{{ perfume.description }}</p>
           <p class="price">${{ perfume.price }}</p>
-          <button @click="addToCart(perfume)">Add to Cart</button>
+          <!-- Add stock indicator -->
+          <p class="stock" :class="{ 'low-stock': perfume.stock < 5 }">
+            In Stock: {{ perfume.stock }}
+          </p>
+          <button @click="addToCart(perfume)" :disabled="perfume.stock === 0">
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
@@ -34,61 +72,166 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import 'primeicons/primeicons.css'
-// Your perfume data
-const perfumes = ref([
+
+interface Perfume {
+  id: number
+  name: string
+  stock?: number  // Optional stock tracking
+  category?: string  // Optional categorization
+}
+
+const cartItems = ref<Perfume[]>([])
+const isCartVisible = ref(false)
+
+const toggleCart = () => {
+  console.log('Current visibility:', isCartVisible.value)
+  isCartVisible.value = !isCartVisible.value
+  console.log('New visibility:', isCartVisible.value)
+}
+
+// Enhanced addToCart function
+const addToCart = (perfume: Perfume) => {
+  cartItems.value.push(perfume);
+}
+
+// Calculate cart total
+const calculateTotal = () => {
+  return cartItems.value.reduce((total, item) => total + item.price, 0).toFixed(2)
+}
+
+// Sample perfume data
+const perfumes = ref<Perfume[]>([
   {
     id: 1,
-    name: 'Cyber Byte',
-    description: 'A gulp of air from the Y2K aesthetic',
+    name: 'Summer Breeze',
+    description: 'Light and fresh with citrus notes',
     price: 79.99,
-    image: '/perfume1.jpg'
+    image: '/images/perfumes/summer-breeze.jpg',
+    stock: 10,
+    category: 'Fresh'
   },
   {
     id: 2,
-    name: 'Digital Diva',
-    description: 'A Vocaloid Inspired Scent',
+    name: 'Midnight Rose',
+    description: 'Elegant rose with vanilla undertones',
     price: 89.99,
-    image: '/perfume2.jpg'
+    image: '/images/perfumes/midnight-rose.jpg',
+    stock: 5,
+    category: 'Floral'
   },
-  // Add more perfumes here
-])
+  // Copy and paste the above format to add more perfumes!
+]);
 
-// Add to cart function (we'll expand this later)
-const addToCart = (perfume: any) => {
-  alert(`Added ${perfume.name} to cart!`)
-}
+// Add a ref for the selected category
+const selectedCategory = ref<string>('All');
+
+// Filter perfumes by category using a computed property
+const filteredPerfumes = computed(() => {
+  if (selectedCategory.value === 'All') {
+    return perfumes.value;
+  } else {
+    return perfumes.value.filter(perfume => perfume.category === selectedCategory.value);
+  }
+});
+
+// Update the filterByCategory function
+const filterByCategory = (category: string) => {
+  selectedCategory.value = category;
+};
+
 </script>
 
 <style>
+/* Main container styles */
 .app {
+  /* 👇 CHANGE FONT if you want a different one */
   font-family: Arial, sans-serif;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* Navigation bar styles */
 .nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid #eee;
+  position: relative;
+  /* Add this temporarily */
+  background: #f0f0f0;
+  /* Light gray background to see nav boundaries */
 }
 
+/* Navigation link styles */
 .nav-links a {
   margin-left: 2rem;
   text-decoration: none;
+  /* 👇 CHANGE COLOR of the menu text */
   color: #333;
 }
 
+/* Hero section styles */
 .hero {
   text-align: center;
   padding: 4rem 2rem;
+  /* 👇 CHANGE COLOR of the hero background */
   background: #f9f9f9;
   margin: 2rem 0;
 }
 
+
+/*shopping cart display*/
+.shopping-cart {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  z-index: 9999;
+  border: 2px solid red;
+  pointer-events: all;
+  overflow-y: auto;
+  transform: translateZ(0);
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cart-items {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+.cart-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 2rem;
+  color: #665;
+}
+
+.cart-total {
+  text-align: right;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+/* Product grid layout */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -96,34 +239,104 @@ const addToCart = (perfume: any) => {
   padding: 2rem 0;
 }
 
+/* Individual product card styles */
 .product-card {
+  /* 👇 CHANGE COLORS of the card borders and background */
   border: 1px solid #eee;
   padding: 1rem;
   text-align: center;
   border-radius: 8px;
 }
 
+/* Product image styles */
 .product-card img {
   max-width: 100%;
   height: auto;
 }
 
+/* Price text styles */
 .price {
   font-weight: bold;
   font-size: 1.2rem;
+  /* 👇 CHANGE COLOR of the price text */
   color: #2c3e50;
 }
 
+/* Button styles */
 button {
+  /* 👇 CHANGE COLORS of the buttons */
   background: #000;
+  /* Button background color */
   color: white;
+  /* Button text color */
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
 }
 
+/* Button hover effect */
 button:hover {
+  /* 👇 CHANGE COLOR of the button when hovered */
   background: #333;
+}
+
+/* Add new styles */
+.cart-icon {
+  position: relative;
+  padding: 1rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.cart-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  justify-content: center;
+}
+
+.filters button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.filters button:hover {
+  background: #f5f5f5;
+}
+
+.stock {
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.low-stock {
+  color: #ff4444;
+}
+
+/* Make the site responsive */
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .nav-links {
+    display: none;
+    /* Consider adding a mobile menu */
+  }
 }
 </style>

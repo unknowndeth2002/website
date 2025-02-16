@@ -3,6 +3,7 @@
   "specifiers": {
     "npm:@vitejs/plugin-vue@^5.2.1": "5.2.1_vite@6.1.0_vue@3.5.13__typescript@5.7.3_typescript@5.7.3",
     "npm:@vue/tsconfig@0.7": "0.7.0_typescript@5.7.3_vue@3.5.13__typescript@5.7.3",
+    "npm:primeicons@7": "7.0.0",
     "npm:typescript@~5.7.2": "5.7.3",
     "npm:vite@^6.1.0": "6.1.0",
     "npm:vue-tsc@^2.2.0": "2.2.0_typescript@5.7.3",
@@ -381,6 +382,9 @@
         "source-map-js"
       ]
     },
+    "primeicons@7.0.0": {
+      "integrity": "sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw=="
+    },
     "rollup@4.34.7": {
       "integrity": "sha512-8qhyN0oZ4x0H6wmBgfKxJtxM7qS98YJ0k0kNh5ECVtuchIJ7z9IVVvzpmtQyT10PXKMtBxYr1wQ5Apg8RS8kXQ==",
       "dependencies": [
@@ -450,6 +454,7 @@
       "dependencies": [
         "npm:@vitejs/plugin-vue@^5.2.1",
         "npm:@vue/tsconfig@0.7",
+        "npm:primeicons@7",
         "npm:typescript@~5.7.2",
         "npm:vite@^6.1.0",
         "npm:vue-tsc@^2.2.0",
