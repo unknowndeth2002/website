@@ -39,6 +39,11 @@
           <a href="#bestsellers">Best Sellers</a>
           <a href="#contact">Contact</a>
         </div>
+        <!-- Add cart icon here -->
+        <div class="cart-icon" @click="toggleCart">
+          <i class="pi pi-shopping-cart"></i> 
+          <span class="cart-count">{{ cartItems.length }}</span>
+        </div>
       </nav>
   
 
@@ -118,7 +123,9 @@ const cartItems = ref<Perfume[]>([])
 const isCartVisible = ref(false)
 
 const toggleCart = () => {
+  console.log('Current visibility:', isCartVisible.value)
   isCartVisible.value = !isCartVisible.value
+  console.log('New visibility:', isCartVisible.value)
 }
 
 // Enhanced addToCart function
@@ -184,8 +191,8 @@ const filterByCategory = (category: string) => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  /* 👇 CHANGE COLOR of the border under the nav */
   border-bottom: 1px solid #eee;
+  position: relative;
 }
 
 /* Navigation link styles */
@@ -216,7 +223,7 @@ const filterByCategory = (category: string) => {
   background: white;
   box-shadow: -2px 0 5px rgba(0,0,0,0.2);
   padding: 1rem;
-  z-index: 1000;  
+  z-index: 9999;
 }
 
 .cart-header {
@@ -303,6 +310,7 @@ const filterByCategory = (category: string) => {
     position: relative;
     padding: 1rem;
     cursor: pointer;
+    margin-left: auto;
   }
   
   .cart-count {
