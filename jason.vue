@@ -1,7 +1,34 @@
 <template>
     <!-- This is the main container of your website -->
     <div class="app">
-      <!-- Navigation bar at the top -->
+      <div class="cart-icon" @click="toggleCart">
+  <i class="pi pi-shopping-cart"></i> 
+  <span class="cart-count">{{ cartItems.length }}</span>
+</div>
+
+<div class="shopping-cart" v-show="isCartVisible">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button @click="toggleCart">Close</button>
+  </div>
+  
+  <div v-if="cartItems.length === 0" class="empty-cart">
+    <p>Your cart is empty</p>
+  </div>
+
+  <div v-else class="cart-items">
+    <div v-for="item in cartItems" :key="item.id" class="cart-item">
+      <img :src="item.image" :alt="item.name">
+      <h4>{{ item.name }}</h4>
+      <p>${{ item.price }}</p>
+    </div>
+  </div>
+
+  <div class="cart-total">
+    Total: ${{ calculateTotal() }}
+  </div>
+</div>
+
       <nav class="nav">
         <!-- 👇 CHANGE THIS TEXT to your store name -->
         <div class="logo">Your Brand Name</div>
@@ -27,183 +54,157 @@
       </div>
   
 
-<div class="cart-icon" @click="toggleCart">
-  <i class="pi pi-shopping-cart"></i> 
-  <span class="cart-count">{{ cartItems.length }}</span>
-</div>
 
-<div class="shopping-cart" v-show="isCartVisible">
-  <div class="cart-header">
-    <h3>Your Cart</h3>
-    <button @click="toggleCart">Close</button>
+  
+  <div class="filters">
+    <button 
+      v-for="category in ['All', 'Fresh', 'Floral', 'Woody']" 
+      :key="category"
+      @click="filterByCategory(category)"
+    >
+      {{ category }}
+    </button>
   </div>
   
-  <div v-if="cartItems.length === 0" class="empty-cart">
-    <p>Your cart is empty</p>
-  </div>
-
-<div v-else class="cart-items">
-  <div v-for="item in cartItems" :key="item.id" class="cart-item">
-    <img :src="item.image" :alt="item.name">
-    <h4>{{  item.name }}</h4>
-    <p>${{ item.price }}</p>
-  </div>
-</div>
-
-<div class="cart-total">
-        Total: ${{ calculateTotal() }}
-    </div>
-</div>
-
-      <div class="filters">
+  <!-- Product display section -->
+  <div class="featured">
+    <h2>Best Sellers</h2>
+    <div class="product-grid">
+      <div 
+        v-for="perfume in perfumes" 
+        :key="perfume.id" 
+        class="product-card"
+      >
+        <img :src="perfume.image" :alt="perfume.name">
+        <h3>{{ perfume.name }}</h3>
+        <p>{{ perfume.description }}</p>
+        <p class="price">${{ perfume.price }}</p>
+        <!-- Add stock indicator -->
+        <p class="stock" :class="{ 'low-stock': perfume.stock < 5 }">
+          In Stock: {{ perfume.stock }}
+        </p>
         <button 
-          v-for="category in ['All', 'Fresh', 'Floral', 'Woody']" 
-          :key="category"
-          @click="filterByCategory(category)"
+          @click="addToCart(perfume)"
+          :disabled="perfume.stock === 0"
         >
-          {{ category }}
+          Add to Cart
         </button>
       </div>
-  
-      <!-- Product display section -->
-      <div class="featured">
-        <h2>Best Sellers</h2>
-        <div class="product-grid">
-          <div 
-            v-for="perfume in perfumes" 
-            :key="perfume.id" 
-            class="product-card"
-          >
-            <img :src="perfume.image" :alt="perfume.name">
-            <h3>{{ perfume.name }}</h3>
-            <p>{{ perfume.description }}</p>
-            <p class="price">${{ perfume.price }}</p>
-            <!-- Add stock indicator -->
-            <p class="stock" :class="{ 'low-stock': perfume.stock < 5 }">
-              In Stock: {{ perfume.stock }}
-            </p>
-            <button 
-              @click="addToCart(perfume)"
-              :disabled="perfume.stock === 0"
-            >
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
-  </template>
-  
+  </div>
+</div>
+</template>
 
 
-  <script setup lang="ts">
-  // This imports the tools we need from Vue
-  import { ref } from 'vue'
-  import 'primeicons/primeicons.css'
 
-  // Add interfaces for type safety
-  interface Perfume {
-    id: number
-    name: string
-    description: string
-    price: number
-    image: string
-    stock?: number  // Optional stock tracking
-    category?: string  // Optional categorization
-  }
+<script setup lang="ts">
+// This imports the tools we need from Vue
+import { ref } from 'vue'
+import 'primeicons/primeicons.css'
 
-  // Add shopping cart functionality
-  const cartItems = ref<Perfume[]>([])
-  const isCartVisible = ref(false)
+// Add interfaces for type safety
+interface Perfume {
+  id: number
+  name: string
+  description: string
+  price: number
+  image: string
+  stock?: number  // Optional stock tracking
+  category?: string  // Optional categorization
+}
 
-  const toggleCart = () => {
-    isCartVisible.value = !isCartVisible.value
-  }
+// Add shopping cart functionality
+const cartItems = ref<Perfume[]>([])
+const isCartVisible = ref(false)
 
-  // Enhanced addToCart function
-  const addToCart = (perfume: Perfume) => {
-    cartItems.value.push(perfume)
-    // Show a more sophisticated notification
-    // You might want to use a toast/notification library here
-    alert(`Added ${perfume.name} to cart! Cart total: $${calculateTotal()}`)
-  }
+const toggleCart = () => {
+  isCartVisible.value = !isCartVisible.value
+}
 
-  // Calculate cart total
-  const calculateTotal = () => {
-    return cartItems.value.reduce((total, item) => total + item.price, 0).toFixed(2)
-  }
+// Enhanced addToCart function
+const addToCart = (perfume: Perfume) => {
+  cartItems.value.push(perfume)
+  // Show a more sophisticated notification
+  // You might want to use a toast/notification library here
+  alert(`Added ${perfume.name} to cart! Cart total: $${calculateTotal()}`)
+}
 
-  // Sample perfume data
-  const perfumes = ref<Perfume[]>([
-    {
-      id: 1,
-      name: 'Summer Breeze',
-      description: 'Light and fresh with citrus notes',
-      price: 79.99,
-      image: '/images/perfumes/summer-breeze.jpg',
-      stock: 10,
-      category: 'Fresh'
-    },
-    {
-      id: 2,
-      name: 'Midnight Rose',
-      description: 'Elegant rose with vanilla undertones',
-      price: 89.99,
-      image: '/images/perfumes/midnight-rose.jpg',
-      stock: 5,
-      category: 'Floral'
-    },
-    // Copy and paste the above format to add more perfumes!
-  ])
+// Calculate cart total
+const calculateTotal = () => {
+  return cartItems.value.reduce((total, item) => total + item.price, 0).toFixed(2)
+}
 
-  // Filter perfumes by category
-  const filterByCategory = (category: string) => {
-    if (category === 'All') {
-      // Show all perfumes
-      perfumes.value = ref<Perfume[]>([...perfumes.value])
-    } else {
-      // Filter perfumes based on the selected category
-      perfumes.value = ref<Perfume[]>(perfumes.value.filter(perfume => perfume.category === category))
-    }
+// Sample perfume data
+const perfumes = ref<Perfume[]>([
+  {
+    id: 1,
+    name: 'Summer Breeze',
+    description: 'Light and fresh with citrus notes',
+    price: 79.99,
+    image: '/images/perfumes/summer-breeze.jpg',
+    stock: 10,
+    category: 'Fresh'
+  },
+  {
+    id: 2,
+    name: 'Midnight Rose',
+    description: 'Elegant rose with vanilla undertones',
+    price: 89.99,
+    image: '/images/perfumes/midnight-rose.jpg',
+    stock: 5,
+    category: 'Floral'
+  },
+  // Copy and paste the above format to add more perfumes!
+])
+
+// Filter perfumes by category
+const filterByCategory = (category: string) => {
+  if (category === 'All') {
+    // Show all perfumes
+    perfumes.value = ref<Perfume[]>([...perfumes.value])
+  } else {
+    // Filter perfumes based on the selected category
+    perfumes.value = ref<Perfume[]>(perfumes.value.filter(perfume => perfume.category === category))
   }
-  </script>
-  
-  <style>
-  /* Main container styles */
-  .app {
-    /* 👇 CHANGE FONT if you want a different one */
-    font-family: Arial, sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* Navigation bar styles */
-  .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    /* 👇 CHANGE COLOR of the border under the nav */
-    border-bottom: 1px solid #eee;
-  }
-  
-  /* Navigation link styles */
-  .nav-links a {
-    margin-left: 2rem;
-    text-decoration: none;
-    /* 👇 CHANGE COLOR of the menu text */
-    color: #333;
-  }
-  
-  /* Hero section styles */
-  .hero {
-    text-align: center;
-    padding: 4rem 2rem;
-    /* 👇 CHANGE COLOR of the hero background */
-    background: #f9f9f9;
-    margin: 2rem 0;
-  }
-  
+}
+</script>
+
+<style>
+/* Main container styles */
+.app {
+  /* 👇 CHANGE FONT if you want a different one */
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Navigation bar styles */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  /* 👇 CHANGE COLOR of the border under the nav */
+  border-bottom: 1px solid #eee;
+}
+
+/* Navigation link styles */
+.nav-links a {
+  margin-left: 2rem;
+  text-decoration: none;
+  /* 👇 CHANGE COLOR of the menu text */
+  color: #333;
+}
+
+/* Hero section styles */
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  /* 👇 CHANGE COLOR of the hero background */
+  background: #f9f9f9;
+  margin: 2rem 0;
+}
+
 
 /*shopping cart display*/
 .shopping-cart {
@@ -353,4 +354,4 @@
       display: none; /* Consider adding a mobile menu */
     }
   }
-  </style>
+</style>
