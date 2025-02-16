@@ -14,9 +14,7 @@
         </div>
       </nav>
   
-      <!-- Big welcome section (hero) at the top -->
       <div class="hero">
-        <!-- 👇 CHANGE THESE TEXTS to your taglines -->
         <h1>Luxury Fragrances</h1>
         <p>Discover your signature scent</p>
       </div>
@@ -27,13 +25,12 @@
         <a href="#contact"><i class="pi pi-envelope"></i> Contact</a>
       </div>
   
-      <!-- Add a shopping cart icon with count -->
+
       <div class="cart-icon">
         <i class="pi pi-shopping-cart"></i>
         <span class="cart-count">{{ cartItems.length }}</span>
       </div>
   
-      <!-- Add category filters -->
       <div class="filters">
         <button 
           v-for="category in ['All', 'Fresh', 'Floral', 'Woody']" 
@@ -47,9 +44,7 @@
       <!-- Product display section -->
       <div class="featured">
         <h2>Best Sellers</h2>
-        <!-- This creates a grid of product cards -->
         <div class="product-grid">
-          <!-- This loops through your perfumes array and creates a card for each one -->
           <div 
             v-for="perfume in perfumes" 
             :key="perfume.id" 
